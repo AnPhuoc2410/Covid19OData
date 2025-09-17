@@ -7,7 +7,7 @@ namespace Covid19.Server.Models
     {
         [Key]
         [Name("UID")]
-        public long UID { get; set; } // Dùng UID làm khóa chính vì nó là duy nhất
+        public double UID { get; set; } // Dùng UID làm khóa chính vì nó là duy nhất
 
         [Name("Province_State")]
         public string? ProvinceState { get; set; }
@@ -37,7 +37,7 @@ namespace Covid19.Server.Models
         public int? Active { get; set; }
 
         [Name("FIPS")]
-        public int? FIPS { get; set; }
+        public double? FIPS { get; set; }
 
         [Name("Incident_Rate")]
         public double? IncidentRate { get; set; }
