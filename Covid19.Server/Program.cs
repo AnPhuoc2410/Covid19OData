@@ -36,9 +36,9 @@ namespace Covid19.Server
             builder.Services.AddHttpClient();
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy =>
+                options.AddPolicy("AllowReactApp",policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("https://localhost:54956")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
@@ -54,6 +54,8 @@ namespace Covid19.Server
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.UseCors("AllowReactApp");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
