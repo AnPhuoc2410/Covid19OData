@@ -1,0 +1,6 @@
+@Covid19.Server_HostAddress = http://localhost:5274
+
+GET {{Covid19.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
