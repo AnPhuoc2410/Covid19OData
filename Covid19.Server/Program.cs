@@ -14,6 +14,8 @@ namespace Covid19.Server
 
             var modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntitySet<CovidConfirmedCase>("CovidConfirmedCases");
+            modelBuilder.EntitySet<CovidDeathCase>("CovidDeathCases");
+            modelBuilder.EntitySet<CovidRecoverCase>("CovidRecoverCases");
 
 
             // Add services to the container.

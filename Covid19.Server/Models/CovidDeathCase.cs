@@ -2,7 +2,7 @@
 
 namespace Covid19.Server.Models
 {
-    public class CovidConfirmedCase
+    public class CovidDeathCase
     {
         [Key]
         public Guid Id { get; set; }
@@ -11,7 +11,5 @@ namespace Covid19.Server.Models
         public double? Lat { get; set; }
         public double? Long { get; set; }
         public DateTime Date { get; set; }
-
     }
-
 }

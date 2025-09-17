@@ -12,7 +12,11 @@
         private static readonly List<CovidConfirmedCase> _cache = new List<CovidConfirmedCase>();
         private static DateTime _lastFetchTime = DateTime.MinValue;
         private readonly HttpClient _httpClient;
-        private const string DataUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+        private const string Covid_Confirm = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+        private const string Covid_Death = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+        private const string Covid_Recover = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv";
+        private const string Covid_Daily_Report = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/02-21-2022.csv";
+
 
         public CovidDataService(HttpClient httpClient)
         {
@@ -29,7 +33,7 @@
             }
 
             var records = new List<CovidConfirmedCase>();
-            var response = await _httpClient.GetAsync(DataUrl);
+            var response = await _httpClient.GetAsync(Covid_Confirm);
             response.EnsureSuccessStatusCode();
 
             using (var stream = await response.Content.ReadAsStreamAsync())
@@ -54,7 +58,6 @@
                     for (int i = 0; i < dateColumns.Count; i++)
                     {
                         var dateString = dateColumns[i];
-                        var confirmedCount = csv.GetField<int>(i + 4); // +4 để bắt đầu từ cột dữ liệu
 
                         records.Add(new CovidConfirmedCase
                         {
@@ -64,7 +67,6 @@
                             Lat = lat,
                             Long = lon,
                             Date = DateTime.Parse(dateString, CultureInfo.InvariantCulture),
-                            Confirmed = confirmedCount
                         });
                     }
                 }
