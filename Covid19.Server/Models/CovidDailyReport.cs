@@ -21,20 +21,20 @@ namespace Covid19.Server.Models
         [Name("Lat")]
         public double? Lat { get; set; }
 
-        [Name("Long_")] // Thuộc tính này để map với cột "Long_" trong CSV
+        [Name("Long_")]
         public double? Long { get; set; }
 
         [Name("Confirmed")]
-        public int? Confirmed { get; set; }
+        public double? Confirmed { get; set; }
 
         [Name("Deaths")]
-        public int? Deaths { get; set; }
+        public double? Deaths { get; set; }
 
         [Name("Recovered")]
-        public int? Recovered { get; set; }
+        public double? Recovered { get; set; }
 
         [Name("Active")]
-        public int? Active { get; set; }
+        public double? Active { get; set; }
 
         [Name("FIPS")]
         public double? FIPS { get; set; }

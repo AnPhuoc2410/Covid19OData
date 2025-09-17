@@ -12,5 +12,6 @@ namespace Covid19.Server.Models
         public double? Long { get; set; }
         public DateTime Date { get; set; }
 
+        public int Recovered { get; set; }
     }
 }

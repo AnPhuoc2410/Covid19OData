@@ -11,7 +11,7 @@ namespace Covid19.Server.Models
         public double? Lat { get; set; }
         public double? Long { get; set; }
         public DateTime Date { get; set; }
-
+        public int Confirmed { get; set; }
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using Covid19.Server.Services;
+﻿using Covid19.Server.Models;
+using Covid19.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -18,7 +19,7 @@ namespace Covid19.Server.Controllers
         }
 
         [EnableQuery]
-        public async Task<IActionResult> Get([FromQuery] string date)
+        public async Task<ActionResult<IQueryable<CovidDailyReport>>> Get([FromQuery] string date)
         {
             // Nhận ngày từ query string, ví dụ: ?date=2022-02-21
             if (!DateOnly.TryParse(date, CultureInfo.InvariantCulture, out var parsedDate))

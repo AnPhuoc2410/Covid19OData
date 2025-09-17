@@ -1,4 +1,3 @@
-
 using Covid19.Server.Models;
 using Covid19.Server.Services;
 using Microsoft.AspNetCore.OData;
@@ -13,9 +12,9 @@ namespace Covid19.Server
             var builder = WebApplication.CreateBuilder(args);
 
             var modelBuilder = new ODataConventionModelBuilder();
-            modelBuilder.EntitySet<CovidConfirmedCase>("CovidConfirmedCases");
-            modelBuilder.EntitySet<CovidDeathCase>("CovidDeathCases");
-            modelBuilder.EntitySet<CovidRecoverCase>("CovidRecoverCases");
+            modelBuilder.EntitySet<CovidConfirmedCase>("CovidConfirmed");
+            modelBuilder.EntitySet<CovidDeathCase>("CovidDeath");
+            modelBuilder.EntitySet<CovidRecoverCase>("CovidRecover");
             modelBuilder.EntitySet<CovidDailyReport>("CovidDailyReports");
 
 
@@ -45,7 +44,9 @@ namespace Covid19.Server
                 });
             });
 
-            builder.Services.AddSingleton<CovidDataService>(); // data cached
+            builder.Services.AddSingleton<CovidConfirmService>();
+            builder.Services.AddSingleton<CovidDeathService>();
+            builder.Services.AddSingleton<CovidRecoverService>();
             builder.Services.AddSingleton<DailyReportService>();
 
 
