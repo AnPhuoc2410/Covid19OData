@@ -24,7 +24,7 @@ function App() {
     y: number;
     content: string;
   } | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>("2021-01-01");
+  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -161,10 +161,47 @@ function App() {
   };
   const handleMouseLeave = () => setTooltip(null);
 
+  const handleTreemapCellEnter = (event: React.MouseEvent, name: string, size: number) => {
+    setHoveredCell(name);
+    setTooltip({
+      x: event.clientX,
+      y: event.clientY,
+      content: `${name}: ${formatNumber(size)} ${selectedMetric}`,
+    });
+  };
+
+  const handleTreemapCellLeave = () => {
+    setHoveredCell(null);
+    setTooltip(null);
+  };
+
   const treemapData = data.map((d) => ({
     name: d.CountryRegion,
     size: d[selectedMetric],
   }));
+
+  // Responsive treemap dimensions
+  const getTreemapDimensions = () => {
+    const width = window.innerWidth;
+    if (width <= 480) {
+      return { width: width - 40, height: 300 };
+    } else if (width <= 768) {
+      return { width: width - 60, height: 400 };
+    } else {
+      return { width: 1000, height: 500 };
+    }
+  };
+
+  const [treemapDimensions, setTreemapDimensions] = useState(getTreemapDimensions());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setTreemapDimensions(getTreemapDimensions());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (loading) {
     return (
@@ -276,52 +313,103 @@ function App() {
       </div>
 
       {/* Treemap */}
-      <div style={{ marginTop: "40px" }}>
-        <h2>
-          Treemap by {selectedMetric} ({data.length} countries)
-        </h2>
-        <Treemap
-          width={1000}
-          height={500}
-          data={treemapData}
-          dataKey="size"
-          stroke="#fff"
-          fill="#82ca9d"
-          content={({ x, y, width, height, name, size }) => {
-            if (width <= 40 || height <= 20) return <g></g>; // Return empty group instead of null
-            return (
-              <g>
-                <rect
-                  x={x}
-                  y={y}
-                  width={width}
-                  height={height}
-                  style={{
-                    fill:
-                      selectedMetric === "Confirmed"
-                        ? "#3498db"
-                        : selectedMetric === "Deaths"
-                        ? "#e74c3c"
-                        : "#2ecc71",
-                    stroke: "#fff",
-                    strokeWidth: 1,
-                  }}
-                />
-                <text
-                  x={x + width / 2}
-                  y={y + height / 2}
-                  textAnchor="middle"
-                  fill="#fff"
-                  fontSize={12}
-                >
-                  {name} ({formatNumber(size)})
-                </text>
-              </g>
-            );
-          }}
-        >
-          <ReTooltip />
-        </Treemap>
+      <div className="treemap-container">
+        <div className="treemap-header">
+          <h2>
+            COVID-19 {selectedMetric} by Country ({data.length} countries)
+          </h2>
+        </div>
+        <div className="treemap-wrapper">
+          <div className="treemap-chart">
+            <Treemap
+              width={treemapDimensions.width}
+              height={treemapDimensions.height}
+              data={treemapData}
+              dataKey="size"
+              stroke="#fff"
+              fill="#82ca9d"
+              content={({ x, y, width, height, name, size }) => {
+                if (width <= 60 || height <= 30) return <g></g>;
+                
+                // Calculate opacity based on size for better visual hierarchy
+                const maxSize = Math.max(...treemapData.map(d => d.size));
+                const opacity = 0.7 + (size / maxSize) * 0.3;
+                
+                // Dynamic font size based on cell size and screen size
+                const baseFontSize = treemapDimensions.width <= 480 ? 10 : treemapDimensions.width <= 768 ? 12 : 14;
+                const fontSize = Math.min(width / 8, height / 4, baseFontSize);
+                const smallFont = fontSize * 0.8;
+                
+                // Color scheme with gradients
+                const colors = {
+                  Confirmed: `rgba(52, 152, 219, ${opacity})`,
+                  Deaths: `rgba(231, 76, 60, ${opacity})`,
+                  Recovered: `rgba(46, 204, 113, ${opacity})`
+                };
+                
+                return (
+                  <g 
+                    className="treemap-cell"
+                    onMouseEnter={(event) => handleTreemapCellEnter(event, name, size)}
+                    onMouseLeave={handleTreemapCellLeave}
+                  >
+                    <defs>
+                      <linearGradient id={`gradient-${x}-${y}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor={colors[selectedMetric]} />
+                        <stop offset="100%" stopColor={colors[selectedMetric].replace(opacity.toString(), (opacity * 0.8).toString())} />
+                      </linearGradient>
+                    </defs>
+                    <rect
+                      x={x}
+                      y={y}
+                      width={width}
+                      height={height}
+                      fill={`url(#gradient-${x}-${y})`}
+                      stroke="#fff"
+                      strokeWidth={hoveredCell === name ? 3 : 2}
+                      rx={4}
+                      ry={4}
+                    />
+                    <text
+                      x={x + width / 2}
+                      y={y + height / 2 - fontSize / 2}
+                      textAnchor="middle"
+                      fill="#fff"
+                      fontSize={fontSize}
+                      className="treemap-text"
+                      fontWeight={hoveredCell === name ? "700" : "600"}
+                    >
+                      {name}
+                    </text>
+                    <text
+                      x={x + width / 2}
+                      y={y + height / 2 + fontSize / 2}
+                      textAnchor="middle"
+                      fill="rgba(255, 255, 255, 0.9)"
+                      fontSize={smallFont}
+                      className="treemap-text"
+                      fontWeight={hoveredCell === name ? "600" : "500"}
+                    >
+                      {formatNumber(size)}
+                    </text>
+                  </g>
+                );
+              }}
+            >
+              <ReTooltip 
+                formatter={(value: number) => [formatNumber(value), selectedMetric]}
+                labelStyle={{ color: '#2c3e50' }}
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              />
+            </Treemap>
+          </div>
+        </div>
       </div>
 
       {/* Tooltip Map */}
