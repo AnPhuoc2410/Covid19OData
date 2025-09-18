@@ -11,8 +11,6 @@ interface CovidData {
     Id: string;
     ProvinceState: string;
     CountryRegion: string;
-    Lat: number;
-    Long: number;
     Date: string;
     Confirmed: number;
     Deaths: number;
@@ -45,42 +43,25 @@ function App() {
             let allData: CovidData[] = [];
             let nextUrl: string | null = "https://localhost:7049/odata/CovidData?$orderby=Date desc";
             let pageCount = 0;
-            const maxPages = 50; // Safety limit to prevent infinite loops
+            const maxPages = 50;
 
-            // Fetch all pages
             while (nextUrl && pageCount < maxPages) {
                 setLoadingProgress(`Fetching page ${pageCount + 1}... (${allData.length} records so far)`);
-                console.log(`Fetching page ${pageCount + 1}...`);
 
                 const response: Response = await fetch(nextUrl);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
                 const json = await response.json();
-
-                // Add current page data to our collection
                 allData = allData.concat(json.value || []);
-
-                // Check for next page
                 nextUrl = json['@odata.nextLink'] || null;
                 pageCount++;
 
-                console.log(`Page ${pageCount}: Got ${json.value?.length || 0} records. Total so far: ${allData.length}`);
-
-                // Optional: Add a small delay to avoid overwhelming the server
-                if (nextUrl) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                }
+                if (nextUrl) await new Promise(resolve => setTimeout(resolve, 100));
             }
 
             setLoadingProgress('Processing data...');
-            console.log(`Fetched ${allData.length} total records from ${pageCount} pages`);
 
-            // Group by CountryRegion and get the latest confirmed cases for each country
             const latestByCountry: Record<string, CountryData> = {};
-
             allData.forEach((item: CovidData) => {
                 const country = item.CountryRegion;
                 const date = new Date(item.Date);
@@ -94,41 +75,28 @@ function App() {
                         LastUpdate: item.Date
                     };
                 }
-                // else {
-                //     if (new Date(latestByCountry[country].LastUpdate) < date) {
-                //         latestByCountry[country].LastUpdate = item.Date;
-                //     }
-                //     latestByCountry[country].Confirmed += item.Confirmed;
-                // }
             });
 
-            // Convert to array and sort by confirmed cases
             const mapped = Object.values(latestByCountry).sort((a, b) => b[selectedMetric] - a[selectedMetric]);
-
-            console.log('Processed data:', mapped.slice(0, 10)); // Show top 10 for debugging
-            console.log(`Final result: ${mapped.length} unique countries`);
             setData(mapped);
         } catch (err) {
-            console.error('Error fetching data:', err);
             setError(err instanceof Error ? err.message : 'Failed to fetch data');
         } finally {
             setLoading(false);
             setLoadingProgress('');
         }
-    }, []);
+    }, [selectedMetric]);
 
     useEffect(() => {
         fetchData();
     }, [fetchData]);
 
-    // Create a better color scale
     const getColorScale = () => {
         if (data.length === 0) return scaleLinear<string>().domain([0, 1]).range(["#f7f7f7", "#f7f7f7"]);
 
-        const maxCases = Math.max(...data.map((d) => d.Confirmed));
-        const minCases = Math.min(...data.filter(d => d.Confirmed > 0).map((d) => d.Confirmed));
+        const maxCases = Math.max(...data.map((d) => d[selectedMetric]));
+        const minCases = Math.min(...data.filter(d => d[selectedMetric] > 0).map((d) => d[selectedMetric]));
 
-        // Use logarithmic scale for better visualization of wide range
         return scaleLinear<string>()
             .domain([0, Math.log10(minCases + 1), Math.log10(maxCases * 0.1), Math.log10(maxCases * 0.5), Math.log10(maxCases)])
             .range(["#f7f7f7", "#fee5d9", "#fcae91", "#fb6a4a", "#cb181d"]);
@@ -136,22 +104,14 @@ function App() {
 
     const colorScale = getColorScale();
 
-    const formatNumber = (num: number) => {
-        return new Intl.NumberFormat().format(num);
-    };
+    const formatNumber = (num: number) => new Intl.NumberFormat().format(num);
 
-    // Improved country name matching
     const findCountryData = (geoName: string): CountryData | undefined => {
-        // Direct match first
         let countryData = data.find(d => d.CountryRegion === geoName);
 
         if (!countryData) {
-            // Try common name variations
             const nameMapping: Record<string, string> = {
                 "United States of America": "US",
-                "United Kingdom": "United Kingdom",
-                "Russia": "Russia",
-                "Iran": "Iran",
                 "South Korea": "Korea, South",
                 "North Korea": "Korea, North",
                 "Czech Republic": "Czechia",
@@ -164,11 +124,8 @@ function App() {
             };
 
             const mappedName = nameMapping[geoName];
-            if (mappedName) {
-                countryData = data.find(d => d.CountryRegion === mappedName);
-            }
+            if (mappedName) countryData = data.find(d => d.CountryRegion === mappedName);
 
-            // Try fuzzy matching
             if (!countryData) {
                 countryData = data.find(d =>
                     d.CountryRegion.toLowerCase().includes(geoName.toLowerCase()) ||
@@ -176,30 +133,26 @@ function App() {
                 );
             }
         }
-
         return countryData;
     };
 
     const handleMouseEnter = (event: React.MouseEvent, geo: any) => {
         const countryData = findCountryData(geo.properties.name);
-        const cases = countryData ? countryData.Confirmed : 0;
+        const value = countryData ? countryData[selectedMetric] : 0;
         const lastUpdate = countryData ? new Date(countryData.LastUpdate).toLocaleDateString() : 'N/A';
 
         setTooltip({
             x: event.clientX,
             y: event.clientY,
-            content: `${geo.properties.name}: ${formatNumber(cases)} cases (${lastUpdate})`
+            content: `${geo.properties.name}: ${formatNumber(value)} ${selectedMetric} (${lastUpdate})`
         });
     };
 
-    const handleMouseLeave = () => {
-        setTooltip(null);
-    };
+    const handleMouseLeave = () => setTooltip(null);
 
     const getLegendData = () => {
         if (data.length === 0) return [];
-
-        const maxCases = Math.max(...data.map((d) => d.Confirmed));
+        const maxCases = Math.max(...data.map((d) => d[selectedMetric]));
         const steps = [0, maxCases * 0.01, maxCases * 0.1, maxCases * 0.3, maxCases];
 
         return steps.map((value, index) => ({
@@ -226,39 +179,41 @@ function App() {
             <div className="app-container">
                 <div className="error">
                     Error loading data: {error}
-                    <button onClick={fetchData} style={{ marginLeft: '10px' }}>
-                        Retry
-                    </button>
+                    <button onClick={fetchData} style={{ marginLeft: '10px' }}>Retry</button>
                 </div>
             </div>
         );
     }
 
+    const totalConfirmed = data.reduce((sum, d) => sum + d.Confirmed, 0);
+    const totalDeaths = data.reduce((sum, d) => sum + d.Deaths, 0);
+    const totalRecovered = data.reduce((sum, d) => sum + d.Recovered, 0);
+
     return (
         <div className="app-container">
             <div className="header">
                 <h1>COVID-19 Global Cases</h1>
-                <p>Interactive world map showing confirmed cases by country ({data.length} countries)</p>
+                <p>Interactive world map showing {selectedMetric.toLowerCase()} by country ({data.length} countries)</p>
 
                 {/* Metric Selector */}
                 <div className="metric-selector">
-                    <button 
-                        className={selectedMetric === 'Confirmed' ? 'active' : ''}
-                        onClick={() => setSelectedMetric('Confirmed')}
+                    <button
+                        className={`confirmed ${selectedMetric === "Confirmed" ? "active" : ""}`}
+                        onClick={() => setSelectedMetric("Confirmed")}
                     >
-                        Confirmed Cases
+                        🔵 Confirmed
                     </button>
-                    <button 
-                        className={selectedMetric === 'Deaths' ? 'active' : ''}
-                        onClick={() => setSelectedMetric('Deaths')}
+                    <button
+                        className={`deaths ${selectedMetric === "Deaths" ? "active" : ""}`}
+                        onClick={() => setSelectedMetric("Deaths")}
                     >
-                        Deaths
+                        🔴 Deaths
                     </button>
-                    <button 
-                        className={selectedMetric === 'Recovered' ? 'active' : ''}
-                        onClick={() => setSelectedMetric('Recovered')}
+                    <button
+                        className={`recovered ${selectedMetric === "Recovered" ? "active" : ""}`}
+                        onClick={() => setSelectedMetric("Recovered")}
                     >
-                        Recovered
+                        🟢 Recovered
                     </button>
                 </div>
             </div>
@@ -267,10 +222,7 @@ function App() {
                 <div className="map-wrapper">
                     <ComposableMap
                         projection="geoEqualEarth"
-                        projectionConfig={{
-                            scale: 160,
-                            center: [0, 20]
-                        }}
+                        projectionConfig={{ scale: 160, center: [0, 20] }}
                         width={1000}
                         height={600}
                         style={{ width: "100%", height: "auto" }}
@@ -279,9 +231,9 @@ function App() {
                             {({ geographies }) =>
                                 geographies.map((geo) => {
                                     const countryData = findCountryData(geo.properties.name);
-                                    const confirmedCases = countryData ? countryData.Confirmed : 0;
-                                    const color = confirmedCases > 0
-                                        ? colorScale(Math.log10(confirmedCases + 1))
+                                    const value = countryData ? countryData[selectedMetric] : 0;
+                                    const color = value > 0
+                                        ? colorScale(Math.log10(value + 1))
                                         : "#f7f7f7";
 
                                     return (
@@ -292,19 +244,9 @@ function App() {
                                             stroke="#ffffff"
                                             strokeWidth={0.5}
                                             style={{
-                                                default: {
-                                                    outline: "none",
-                                                },
-                                                hover: {
-                                                    fill: "#2c3e50",
-                                                    outline: "none",
-                                                    cursor: "pointer",
-                                                    strokeWidth: 1,
-                                                },
-                                                pressed: {
-                                                    fill: "#34495e",
-                                                    outline: "none",
-                                                },
+                                                default: { outline: "none" },
+                                                hover: { fill: "#2c3e50", outline: "none", cursor: "pointer", strokeWidth: 1 },
+                                                pressed: { fill: "#34495e", outline: "none" },
                                             }}
                                             onMouseEnter={(event) => handleMouseEnter(event, geo)}
                                             onMouseLeave={handleMouseLeave}
@@ -317,51 +259,34 @@ function App() {
 
                     {/* Legend */}
                     <div className="legend">
-                        <div className="legend-title">Confirmed Cases</div>
+                        <div className="legend-title">{selectedMetric}</div>
                         {getLegendData().map((item, index) => (
                             <div key={index} className="legend-item">
-                                <div
-                                    className="legend-color"
-                                    style={{ backgroundColor: item.color }}
-                                ></div>
+                                <div className="legend-color" style={{ backgroundColor: item.color }}></div>
                                 <span style={{ color: "black" }}>{item.label}</span>
                             </div>
                         ))}
-                        <div className="legend-note">
-                            <small>Using logarithmic scale</small>
-                        </div>
+                        <div className="legend-note"><small>Using logarithmic scale</small></div>
                     </div>
                 </div>
 
                 {/* Statistics */}
-                <div className="stats">
-                    <div className="stat-item">
-                        <strong>Total Countries:</strong> {data.length}
+                <div className="stats-grid">
+                    <div>
+                        <div><strong>Total Confirmed:</strong> {formatNumber(totalConfirmed)}</div>
+                        <div><strong>Total Deaths:</strong> {formatNumber(totalDeaths)}</div>
+                        <div><strong>Total Recovered:</strong> {formatNumber(totalRecovered)}</div>
                     </div>
-                    <div className="stat-item">
-                        <strong>Total Confirmed:</strong> {formatNumber(data.reduce((sum, d) => sum + d.Confirmed, 0))}
-                    </div>
-                    <div className="stat-item">
-                        <strong>Total Deaths:</strong> {formatNumber(data.reduce((sum, d) => sum + d.Deaths, 0))}
-                    </div>
-                    <div className="stat-item">
-                        <strong>Total Recovered:</strong> {formatNumber(data.reduce((sum, d) => sum + d.Recovered, 0))}
-                    </div>
-                    <div className="stat-item">
-                        <strong>Most Affected ({selectedMetric}):</strong> {data[0]?.CountryRegion} ({formatNumber(data[0]?.[selectedMetric] || 0)})
+                    <div>
+                        <div><strong>Total Countries:</strong> {data.length}</div>
+                        <div><strong>Most Affected ({selectedMetric}):</strong> {data[0]?.CountryRegion} ({formatNumber(data[0]?.[selectedMetric] || 0)})</div>
                     </div>
                 </div>
             </div>
 
             {/* Tooltip */}
             {tooltip && (
-                <div
-                    className="tooltip"
-                    style={{
-                        left: tooltip.x + 10,
-                        top: tooltip.y - 30
-                    }}
-                >
+                <div className="tooltip" style={{ left: tooltip.x + 10, top: tooltip.y - 30 }}>
                     {tooltip.content}
                 </div>
             )}

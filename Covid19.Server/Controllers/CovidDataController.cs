@@ -21,7 +21,7 @@ namespace Covid19.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IQueryable<CovidConfirmedCase>>> Get()
         {
-            var cases = await _dataService.GetCombinedDataAsync();
+            var cases = await _dataService.GetCountrySummariesAsync();
             return Ok(cases.AsQueryable());
         }
     }

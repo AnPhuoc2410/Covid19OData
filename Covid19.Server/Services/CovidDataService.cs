@@ -80,5 +80,28 @@ namespace Covid19.Server.Services
 
         // Bạn có thể giữ lại hoặc thêm phương thức GetCountrySummariesAsync ở đây
         // nếu cần, nó sẽ gọi GetCombinedDataAsync() bên trên.
+
+        public async Task<IEnumerable<CovidDataPoint>> GetCountrySummariesAsync()
+        {
+            var combinedData = await GetCombinedDataAsync();
+
+            var countrySummaries = combinedData
+                .GroupBy(d => new { d.CountryRegion, d.Date })
+                .Select(g => new CovidDataPoint
+                {
+                    Id = Guid.NewGuid(),
+                    ProvinceState = null, // Bỏ qua chi tiết tỉnh
+                    CountryRegion = g.Key.CountryRegion,
+                    Lat = 0, // Có thể tính trung bình hoặc bỏ trống
+                    Long = 0,
+                    Date = g.Key.Date,
+                    Confirmed = g.Sum(x => x.Confirmed),
+                    Deaths = g.Sum(x => x.Deaths),
+                    Recovered = g.Sum(x => x.Recovered)
+                })
+                .ToList();
+
+            return countrySummaries;
+        }
     }
 }

@@ -23,6 +23,7 @@ body {
   min-height: 100vh;
 }
 
+/* Header */
 .header {
   text-align: center;
   margin-bottom: 30px;
@@ -41,51 +42,66 @@ body {
   margin: 0 0 20px 0;
 }
 
+/* Metric Selector */
 .metric-selector {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
 }
 
 .metric-selector button {
-  padding: 10px 20px;
-  border: 2px solid #3498db;
-  background: white;
-  color: #3498db;
-  border-radius: 25px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 30px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.metric-selector button:hover {
-  background: #3498db;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  min-width: 140px;
+  justify-content: center;
 }
 
+/* Confirmed */
+.metric-selector button.confirmed {
+  background: #3498db;
+}
+.metric-selector button.confirmed:hover {
+  background: #2980b9;
+}
+
+/* Deaths */
+.metric-selector button.deaths {
+  background: #e74c3c;
+}
+.metric-selector button.deaths:hover {
+  background: #c0392b;
+}
+
+/* Recovered */
+.metric-selector button.recovered {
+  background: #2ecc71;
+}
+.metric-selector button.recovered:hover {
+  background: #27ae60;
+}
+
+/* Active state */
 .metric-selector button.active {
-  background: #3498db;
-  color: white;
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+  font-size: 1rem;
+  font-weight: 700;
+  border: 2px solid rgba(0,0,0,0.1);
 }
 
-.metric-selector button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
 
-.updating-indicator {
-  text-align: center;
-  margin-top: 10px;
-  color: #7f8c8d;
-  font-style: italic;
-}
-
+/* Map */
 .map-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -100,6 +116,7 @@ body {
   padding: 20px;
 }
 
+/* Legend */
 .legend {
   position: absolute;
   top: 20px;
@@ -145,21 +162,28 @@ body {
   font-style: italic;
 }
 
+/* Stats */
 .stats {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   padding: 20px;
   background: #f8f9fa;
   border-top: 1px solid #e9ecef;
-  flex-wrap: wrap;
-  gap: 15px;
+  color: black;
 }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  color: #2c3e50;
+}
+
 
 .stat-item {
   text-align: center;
   padding: 10px;
-  flex: 1;
-  min-width: 180px;
 }
 
 .stat-item strong {
@@ -169,6 +193,7 @@ body {
   font-size: 0.9rem;
 }
 
+/* Tooltip */
 .tooltip {
   position: fixed;
   background: rgba(44, 62, 80, 0.95);
@@ -186,6 +211,7 @@ body {
   line-height: 1.4;
 }
 
+/* Loading & Error */
 .loading, .error {
   text-align: center;
   padding: 50px;
@@ -211,16 +237,16 @@ body {
   background: #2980b9;
 }
 
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
   .app-container {
     padding: 10px;
   }
-  
+
   .header h1 {
     font-size: 2rem;
   }
-  
+
   .legend {
     position: relative;
     top: auto;
@@ -229,22 +255,19 @@ body {
     width: 100%;
     box-sizing: border-box;
   }
-  
+
   .metric-selector {
     flex-direction: column;
     align-items: center;
     gap: 8px;
   }
-  
-  .metric-selector button {
+
+  .metric-selector button,
+  .metric-selector select {
     width: 200px;
   }
-  
+
   .stats {
-    flex-direction: column;
-  }
-  
-  .stat-item {
-    min-width: auto;
+    grid-template-columns: 1fr;
   }
 }
