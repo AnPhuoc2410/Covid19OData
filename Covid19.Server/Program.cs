@@ -27,7 +27,6 @@ namespace Covid19.Server
                     .OrderBy()
                     .Count()
                     .Expand()
-                    .SetMaxTop(1000)
                     .AddRouteComponents("odata", modelBuilder.GetEdmModel())
             );
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

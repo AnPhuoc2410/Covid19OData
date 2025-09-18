@@ -238,6 +238,7 @@ body {
 }
 
 /* Treemap */
+/* Fixed Treemap CSS - Eliminates shaking */
 .treemap-container {
   max-width: 1200px;
   margin: 40px auto;
@@ -277,40 +278,52 @@ body {
   overflow: hidden;
 }
 
-/* Treemap cells styling */
-.treemap-cell {
-  transition: all 0.3s ease;
+/* FIXED: Remove all animations and transforms that cause shaking */
+.treemap-cell-fixed {
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  /* NO transitions or transforms */
 }
 
-.treemap-cell:hover {
-  filter: brightness(1.15) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-  transform: scale(1.02);
-  stroke-width: 3px !important;
+.treemap-cell-fixed:hover {
+  /* Only use filter effects, no transforms */
+  /* Hover effects are handled inline in React code */
 }
 
-.treemap-cell rect {
-  transition: all 0.3s ease;
+/* Remove any global Recharts animation classes that might interfere */
+.recharts-wrapper .recharts-surface {
+  /* Prevent any unexpected transformations */
 }
 
-.treemap-cell:hover rect {
-  stroke: #2c3e50 !important;
-  stroke-width: 3;
-}
-
-.treemap-text {
+/* Ensure text doesn't cause layout shifts */
+.treemap-cell-fixed text {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  pointer-events: none;
-  transition: all 0.3s ease;
+  /* No transitions on text */
 }
 
-.treemap-cell:hover .treemap-text {
-  font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+/* Optional: If you still see shaking, add this to force stable positioning */
+.recharts-treemap {
+  /* Force hardware acceleration without transforms */
+  will-change: auto;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
+
+.recharts-treemap-depth-1 {
+  /* Disable any built-in Recharts animations */
+  transition: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .treemap-wrapper {
+    padding: 20px;
+  }
+  
+  .treemap-header h2 {
+    font-size: 1.5rem;
+  }
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
