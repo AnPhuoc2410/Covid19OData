@@ -16,6 +16,7 @@ namespace Covid19.Server
             modelBuilder.EntitySet<CovidDeathCase>("CovidDeath");
             modelBuilder.EntitySet<CovidRecoverCase>("CovidRecover");
             modelBuilder.EntitySet<CovidDailyReport>("CovidDailyReports");
+            modelBuilder.EntitySet<CovidDataPoint>("CovidData");
 
 
             // Add services to the container.
@@ -48,6 +49,8 @@ namespace Covid19.Server
             builder.Services.AddSingleton<CovidDeathService>();
             builder.Services.AddSingleton<CovidRecoverService>();
             builder.Services.AddSingleton<DailyReportService>();
+
+            builder.Services.AddSingleton<CovidDataService>();
 
 
             var app = builder.Build();
