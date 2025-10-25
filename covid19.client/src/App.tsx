@@ -35,7 +35,6 @@ function App() {
             let nextUrl: string | null =
                 "https://localhost:7049/odata/CovidData?$orderby=Date desc";
             let pageCount = 0;
-            // Removed maxPages limit - will load all available data
 
             while (nextUrl) {
                 setLoadingProgress(
@@ -50,7 +49,6 @@ function App() {
                     const json = await response.json();
                     const pageData = json.value || [];
 
-                    // Break if no more data is returned
                     if (pageData.length === 0) {
                         console.log(`No more data on page ${pageCount + 1}, stopping fetch.`);
                         break;
@@ -60,12 +58,10 @@ function App() {
                     nextUrl = json["@odata.nextLink"] || null;
                     pageCount++;
 
-                    // Add a small delay between requests to be respectful to the server
                     if (nextUrl) {
                         await new Promise((resolve) => setTimeout(resolve, 100));
                     }
 
-                    // Optional: Log progress every 10 pages
                     if (pageCount % 10 === 0) {
                         console.log(`Loaded ${pageCount} pages, ${allData.length} total records`);
                     }
