@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SpaRoot>..\covid19.client</SpaRoot>
-    <SpaProxyLaunchCommand>npm run s</SpaProxyLaunchCommand>
+    <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:54956</SpaProxyServerUrl>
   </PropertyGroup>
 

@@ -1,0 +1,180 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow2">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0f172a"/>
+  
+  <!-- Title -->
+  <text x="400" y="35" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+    Quick Setup Guide
+  </text>
+  
+  <!-- Step 1: Prerequisites -->
+  <g>
+    <circle cx="60" cy="80" r="25" fill="#06b6d4" opacity="0.3" stroke="#06b6d4" stroke-width="2"/>
+    <text x="60" y="88" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+      1
+    </text>
+    
+    <text x="120" y="70" font-size="14" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+      Prerequisites
+    </text>
+    
+    <text x="120" y="95" font-size="12" fill="#cbd5e1" font-family="Arial, sans-serif">
+      ✓ .NET 8.0 SDK
+    </text>
+    <text x="120" y="115" font-size="12" fill="#cbd5e1" font-family="Arial, sans-serif">
+      ✓ Node.js 18+
+    </text>
+  </g>
+  
+  <!-- Arrow -->
+  <g>
+    <line x1="280" y1="80" x2="320" y2="80" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrow1)"/>
+    <defs>
+      <marker id="arrow1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+        <polygon points="0 0, 10 3, 0 6" fill="#06b6d4" />
+      </marker>
+    </defs>
+  </g>
+  
+  <!-- Step 2: Database Setup -->
+  <g>
+    <circle cx="360" cy="80" r="25" fill="#10b981" opacity="0.3" stroke="#10b981" stroke-width="2"/>
+    <text x="360" y="88" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+      2
+    </text>
+    
+    <text x="420" y="70" font-size="14" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+      Database Setup
+    </text>
+    
+    <text x="420" y="95" font-size="12" fill="#cbd5e1" font-family="Arial, sans-serif">
+      ✓ PostgreSQL installed
+    </text>
+    <text x="420" y="115" font-size="12" fill="#cbd5e1" font-family="Arial, sans-serif">
+      ✓ covid19_db created
+    </text>
+  </g>
+  
+  <!-- Arrow -->
+  <g>
+    <line x1="580" y1="80" x2="620" y2="80" stroke="#10b981" stroke-width="2" marker-end="url(#arrow2)"/>
+    <defs>
+      <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+        <polygon points="0 0, 10 3, 0 6" fill="#10b981" />
+      </marker>
+    </defs>
+  </g>
+  
+  <!-- Step 3: Connection String -->
+  <g>
+    <circle cx="660" cy="80" r="25" fill="#8b5cf6" opacity="0.3" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="660" y="88" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+      3
+    </text>
+    
+    <text x="720" y="70" font-size="14" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+      Configure
+    </text>
+    <text x="720" y="90" font-size="12" fill="#cbd5e1" font-family="Arial, sans-serif">
+      appsettings.json
+    </text>
+  </g>
+  
+  <!-- Step 4: Backend -->
+  <g>
+    <rect x="40" y="170" width="280" height="120" rx="8" fill="#512bd4" opacity="0.15" stroke="#512bd4" stroke-width="2" filter="url(#shadow2)"/>
+    
+    <circle cx="65" cy="195" r="20" fill="#512bd4" opacity="0.3" stroke="#512bd4" stroke-width="2"/>
+    <text x="65" y="202" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+      4
+    </text>
+    
+    <text x="130" y="190" font-size="13" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+      Backend Setup
+    </text>
+    
+    <text x="130" y="215" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ cd Covid19.Server
+    </text>
+    <text x="130" y="235" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ dotnet restore
+    </text>
+    <text x="130" y="255" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ dotnet ef database update
+    </text>
+    <text x="130" y="275" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ dotnet run
+    </text>
+  </g>
+  
+  <!-- Step 5: Frontend -->
+  <g>
+    <rect x="380" y="170" width="280" height="120" rx="8" fill="#06b6d4" opacity="0.15" stroke="#06b6d4" stroke-width="2" filter="url(#shadow2)"/>
+    
+    <circle cx="405" cy="195" r="20" fill="#06b6d4" opacity="0.3" stroke="#06b6d4" stroke-width="2"/>
+    <text x="405" y="202" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+      5
+    </text>
+    
+    <text x="470" y="190" font-size="13" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+      Frontend Setup
+    </text>
+    
+    <text x="470" y="215" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ cd covid19.client
+    </text>
+    <text x="470" y="235" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ npm install
+    </text>
+    <text x="470" y="255" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      $ npm run dev
+    </text>
+    <text x="470" y="275" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      Open: https://localhost:5173
+    </text>
+  </g>
+  
+  <!-- Step 6: Access Application -->
+  <g>
+    <rect x="190" y="350" width="420" height="110" rx="8" fill="#10b981" opacity="0.15" stroke="#10b981" stroke-width="2" filter="url(#shadow2)"/>
+    
+    <circle cx="215" cy="375" r="20" fill="#10b981" opacity="0.3" stroke="#10b981" stroke-width="2"/>
+    <text x="215" y="382" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="Arial, sans-serif">
+      6
+    </text>
+    
+    <text x="280" y="370" font-size="13" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+      Ready to Use!
+    </text>
+    
+    <text x="280" y="395" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      🌐 Frontend: https://localhost:5173
+    </text>
+    <text x="280" y="415" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      📡 Backend API: https://localhost:5001
+    </text>
+    <text x="280" y="435" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      📚 Swagger Docs: https://localhost:5001/swagger
+    </text>
+    <text x="280" y="455" font-size="11" fill="#cbd5e1" font-family="Arial, sans-serif">
+      🗺️ Interactive Map: Available in dashboard
+    </text>
+  </g>
+  
+  <!-- Vertical connectors -->
+  <g stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3" opacity="0.5">
+    <line x1="65" y1="155" x2="65" y2="170"/>
+    <line x1="65" y1="290" x2="65" y2="350"/>
+    
+    <line x1="405" y1="155" x2="405" y2="170"/>
+    <line x1="405" y1="290" x2="405" y2="350"/>
+    
+    <line x1="235" y1="290" x2="235" y2="350"/>
+  </g>
+</svg>

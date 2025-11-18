@@ -1,0 +1,147 @@
+<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="50" r="40" fill="#06b6d4" opacity="0.1"/>
+  <circle cx="1100" cy="250" r="60" fill="#0891b2" opacity="0.1"/>
+  <circle cx="600" cy="300" r="80" fill="#06b6d4" opacity="0.05"/>
+  
+  <!-- Header bar -->
+  <rect x="0" y="0" width="1200" height="8" fill="url(#headerGradient)"/>
+  
+  <!-- World map icon -->
+  <g transform="translate(60, 80)">
+    <!-- Globe circle -->
+    <circle cx="40" cy="40" r="35" fill="none" stroke="#06b6d4" stroke-width="2" filter="url(#glow)"/>
+    <circle cx="40" cy="40" r="32" fill="none" stroke="#0891b2" stroke-width="1" opacity="0.5"/>
+    
+    <!-- Continents simplified -->
+    <!-- Americas -->
+    <path d="M 35 15 Q 30 25 32 35 Q 35 40 40 38" fill="#10b981" opacity="0.7"/>
+    
+    <!-- Europe/Africa -->
+    <path d="M 48 25 Q 52 30 50 40 Q 48 45 45 42" fill="#10b981" opacity="0.7"/>
+    
+    <!-- Asia -->
+    <path d="M 52 35 Q 58 38 60 45 Q 55 50 50 48" fill="#10b981" opacity="0.7"/>
+    
+    <!-- Grid lines -->
+    <line x1="40" y1="5" x2="40" y2="75" stroke="#06b6d4" stroke-width="1" opacity="0.3"/>
+    <line x1="10" y1="40" x2="70" y2="40" stroke="#06b6d4" stroke-width="1" opacity="0.3"/>
+  </g>
+  
+  <!-- Chart icon -->
+  <g transform="translate(150, 80)">
+    <!-- Bar chart -->
+    <rect x="10" y="45" width="8" height="30" fill="#f59e0b" opacity="0.8"/>
+    <rect x="22" y="35" width="8" height="40" fill="#10b981" opacity="0.8"/>
+    <rect x="34" y="25" width="8" height="50" fill="#06b6d4" opacity="0.8"/>
+    <rect x="46" y="15" width="8" height="60" fill="#8b5cf6" opacity="0.8"/>
+    
+    <!-- Chart axis -->
+    <line x1="5" y1="75" x2="60" y2="75" stroke="#e5e7eb" stroke-width="1.5"/>
+    <line x1="5" y1="75" x2="5" y2="5" stroke="#e5e7eb" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Data points -->
+  <g transform="translate(240, 80)">
+    <!-- Points with animation circles -->
+    <circle cx="15" cy="20" r="4" fill="#06b6d4" filter="url(#glow)"/>
+    <circle cx="15" cy="20" r="8" fill="#06b6d4" opacity="0.2"/>
+    
+    <circle cx="35" cy="35" r="4" fill="#10b981"/>
+    <circle cx="55" cy="25" r="4" fill="#f59e0b"/>
+    <circle cx="70" cy="40" r="4" fill="#8b5cf6"/>
+    
+    <!-- Connection lines -->
+    <polyline points="15,20 35,35 55,25 70,40" fill="none" stroke="#06b6d4" stroke-width="2" opacity="0.5"/>
+  </g>
+  
+  <!-- Main title -->
+  <text x="400" y="120" font-size="48" font-weight="bold" fill="#ffffff" font-family="Arial, sans-serif">
+    COVID-19 Dashboard
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="400" y="160" font-size="20" fill="#cbd5e1" font-family="Arial, sans-serif">
+    Real-time Data Visualization &amp; Analytics
+  </text>
+  
+  <!-- Feature pills -->
+  <g transform="translate(400, 190)">
+    <!-- Pill 1 -->
+    <rect x="0" y="0" width="140" height="32" rx="16" fill="#06b6d4" opacity="0.2" stroke="#06b6d4" stroke-width="1"/>
+    <text x="70" y="21" font-size="13" fill="#06b6d4" text-anchor="middle" font-family="Arial, sans-serif" font-weight="500">
+      📊 Interactive Maps
+    </text>
+    
+    <!-- Pill 2 -->
+    <rect x="160" y="0" width="140" height="32" rx="16" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="1"/>
+    <text x="230" y="21" font-size="13" fill="#10b981" text-anchor="middle" font-family="Arial, sans-serif" font-weight="500">
+      📈 Real-time Stats
+    </text>
+    
+    <!-- Pill 3 -->
+    <rect x="320" y="0" width="140" height="32" rx="16" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" stroke-width="1"/>
+    <text x="390" y="21" font-size="13" fill="#8b5cf6" text-anchor="middle" font-family="Arial, sans-serif" font-weight="500">
+      🌍 Global Insights
+    </text>
+  </g>
+  
+  <!-- Tech stack badges -->
+  <g transform="translate(400, 240)">
+    <!-- .NET -->
+    <rect x="0" y="0" width="90" height="28" rx="4" fill="#512bd4" opacity="0.3"/>
+    <text x="45" y="18" font-size="12" fill="#a78bfa" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold">
+      .NET 8.0
+    </text>
+    
+    <!-- React -->
+    <rect x="100" y="0" width="90" height="28" rx="4" fill="#61dafb" opacity="0.2"/>
+    <text x="145" y="18" font-size="12" fill="#61dafb" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold">
+      React 18
+    </text>
+    
+    <!-- PostgreSQL -->
+    <rect x="200" y="0" width="90" height="28" rx="4" fill="#336791" opacity="0.3"/>
+    <text x="245" y="18" font-size="12" fill="#71b4d4" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold">
+      PostgreSQL
+    </text>
+    
+    <!-- TypeScript -->
+    <rect x="300" y="0" width="90" height="28" rx="4" fill="#3178c6" opacity="0.3"/>
+    <text x="345" y="18" font-size="12" fill="#7fc3ee" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold">
+      TypeScript
+    </text>
+  </g>
+  
+  <!-- Decorative animated elements -->
+  <g opacity="0.3">
+    <circle cx="1050" cy="80" r="3" fill="#06b6d4"/>
+    <circle cx="1090" cy="100" r="2" fill="#06b6d4"/>
+    <circle cx="1100" cy="140" r="3" fill="#10b981"/>
+    <circle cx="1080" cy="170" r="2" fill="#06b6d4"/>
+  </g>
+</svg>
