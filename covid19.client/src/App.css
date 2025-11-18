@@ -12,14 +12,14 @@ body {
 #root {
     width: 100%;
     min-height: 100vh;
-    padding: 20px;
+    padding: 0;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .app-container {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: transparent;
   min-height: 100vh;
 }
 
@@ -27,13 +27,94 @@ body {
 .header {
   text-align: center;
   margin-bottom: 30px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .header h1 {
-  color: #2c3e50;
-  margin-bottom: 10px;
-  font-size: 2.5rem;
-  font-weight: 600;
+  color: white;
+  margin-bottom: 20px;
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.summary {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.summary-item {
+  text-align: center;
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+}
+
+.summary-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.summary-item.confirmed {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.95), rgba(41, 128, 185, 0.95));
+  color: white;
+}
+
+.summary-item.deaths {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.95), rgba(192, 57, 43, 0.95));
+  color: white;
+}
+
+.summary-item.recovered {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.95), rgba(39, 174, 96, 0.95));
+  color: white;
+}
+
+.summary-item .label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  opacity: 0.95;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-item .value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .header p {
@@ -49,10 +130,11 @@ body {
   gap: 15px;
   margin-top: 25px;
   flex-wrap: wrap;
+  animation: fadeIn 0.8s ease-out 0.4s both;
 }
 
 .metric-selector button {
-  padding: 12px 24px;
+  padding: 14px 28px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
@@ -61,54 +143,87 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: white;
-  min-width: 140px;
+  min-width: 150px;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-selector button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.5s;
+}
+
+.metric-selector button:hover::before {
+  left: 100%;
 }
 
 /* Confirmed */
 .metric-selector button.confirmed {
-  background: #3498db;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 .metric-selector button.confirmed:hover {
-  background: #2980b9;
+  background: linear-gradient(135deg, #2980b9, #1f6391);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
 }
 
 /* Deaths */
 .metric-selector button.deaths {
-  background: #e74c3c;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 .metric-selector button.deaths:hover {
-  background: #c0392b;
+  background: linear-gradient(135deg, #c0392b, #a02a1f);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
 }
 
 /* Recovered */
 .metric-selector button.recovered {
-  background: #2ecc71;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }
 .metric-selector button.recovered:hover {
-  background: #27ae60;
+  background: linear-gradient(135deg, #27ae60, #1e8449);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
 }
 
 /* Active state */
 .metric-selector button.active {
-  box-shadow: 0 0 12px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 6px 20px rgba(0,0,0,0.25);
+  transform: translateY(-3px) scale(1.05);
   font-size: 1rem;
   font-weight: 700;
-  border: 2px solid rgba(0,0,0,0.1);
+  border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
 
 /* Map */
 .map-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto 30px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  animation: fadeIn 0.8s ease-out 0.6s both;
+  transition: transform 0.3s ease;
+}
+
+.map-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
 .map-wrapper {
@@ -196,131 +311,492 @@ body {
 /* Tooltip */
 .tooltip {
   position: fixed;
-  background: rgba(44, 62, 80, 0.95);
+  background: linear-gradient(135deg, rgba(44, 62, 80, 0.98), rgba(52, 73, 94, 0.98));
   color: white;
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
   font-weight: 500;
   pointer-events: none;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  max-width: 250px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  max-width: 280px;
   white-space: pre-line;
-  line-height: 1.4;
+  line-height: 1.5;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: tooltipFadeIn 0.2s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Loading & Error */
-.loading, .error {
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-progress {
+  margin-top: 20px;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: #2c3e50;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  min-width: 300px;
   text-align: center;
-  padding: 50px;
-  font-size: 1.2rem;
-  color: #7f8c8d;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; }
 }
 
 .error {
-  color: #e74c3c;
+  text-align: center;
+  padding: 50px;
+  font-size: 1.2rem;
+  color: white;
+  background: rgba(231, 76, 60, 0.9);
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 50px auto;
+  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
 }
 
 .error button {
-  background: #3498db;
-  color: white;
+  background: white;
+  color: #e74c3c;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: all 0.3s ease;
 }
 
 .error button:hover {
-  background: #2980b9;
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Treemap */
-/* Fixed Treemap CSS - Eliminates shaking */
-.treemap-container {
-  max-width: 1200px;
-  margin: 40px auto;
+/* Treemap V2 - Modern UI/UX with All Countries */
+.treemap-container-v2 {
+  max-width: 1300px;
+  margin: 0 auto 30px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+  animation: fadeIn 0.8s ease-out 0.8s both;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid rgba(102, 126, 234, 0.1);
 }
 
-.treemap-header {
-  padding: 20px 30px;
+.treemap-container-v2:hover {
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+.treemap-header-v2 {
+  padding: 35px 40px 30px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.treemap-header h2 {
-  margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.treemap-wrapper {
-  padding: 30px;
-  background: #f8f9fa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 500px;
-}
-
-.treemap-chart {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
   overflow: hidden;
 }
 
-/* FIXED: Remove all animations and transforms that cause shaking */
+.treemap-header-v2::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+  border-radius: 50%;
+}
+
+.treemap-title {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 25px;
+}
+
+.treemap-title h2 {
+  margin: 0 0 10px 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+}
+
+.treemap-title .subtitle {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.95;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* Control Panel */
+.treemap-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  position: relative;
+  z-index: 1;
+  align-items: center;
+}
+
+.control-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* Search Input */
+.search-input {
+  width: 100%;
+  padding: 12px 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Filter Select */
+.filter-select {
+  width: 100%;
+  padding: 12px 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 45px;
+}
+
+.filter-select:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.filter-select option {
+  background: #2c3e50;
+  color: white;
+  padding: 10px;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.mode-btn.active {
+  background: rgba(255, 255, 255, 0.95);
+  color: #667eea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Treemap Wrapper V2 - Fixed Height, No Scroll */
+.treemap-wrapper-v2 {
+  background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.treemap-scroll-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* Remove scroll - display all in fixed viewport */
+}
+
+/* Remove custom scrollbar styles */
+.treemap-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.treemap-scroll-container::-webkit-scrollbar-track {
+  display: none;
+}
+
+.treemap-scroll-container::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+.treemap-scroll-container::-webkit-scrollbar-thumb:hover {
+  display: none;
+}
+
+/* Treemap Chart Styling */
+.treemap-chart {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  margin: 0 auto;
+  /* Remove transform to prevent shaking */
+}
+
+/* Treemap Cell - NO SHAKING - Completely Stable */
 .treemap-cell-fixed {
   cursor: pointer;
-  /* NO transitions or transforms */
+  transition: none !important;
+  transform: none !important;
 }
 
-.treemap-cell-fixed:hover {
-  /* Only use filter effects, no transforms */
-  /* Hover effects are handled inline in React code */
+.treemap-cell-fixed * {
+  transition: none !important;
+  transform: none !important;
 }
 
-/* Remove any global Recharts animation classes that might interfere */
-.recharts-wrapper .recharts-surface {
-  /* Prevent any unexpected transformations */
+.treemap-cell-fixed rect {
+  /* Only allow color changes, NO layout changes */
+  transition: filter 0.15s ease, stroke 0.15s ease !important;
 }
 
-/* Ensure text doesn't cause layout shifts */
 .treemap-cell-fixed text {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* No transitions on text */
+  transition: none !important;
+  transform: none !important;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* Optional: If you still see shaking, add this to force stable positioning */
+/* Ensure stable positioning - NO MOVEMENT */
 .recharts-treemap {
-  /* Force hardware acceleration without transforms */
-  will-change: auto;
+  will-change: auto !important;
   backface-visibility: hidden;
   transform: translateZ(0);
 }
 
+.recharts-treemap * {
+  will-change: auto !important;
+}
+
 .recharts-treemap-depth-1 {
-  /* Disable any built-in Recharts animations */
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Disable ALL animations on treemap */
+.recharts-treemap-depth-1 * {
+  animation: none !important;
   transition: none !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .treemap-wrapper {
-    padding: 20px;
+/* Treemap Footer Stats */
+.treemap-footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 25px 40px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  border-top: 2px solid rgba(102, 126, 234, 0.1);
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.stat-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  color: #2c3e50;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* No Data Message */
+.no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px;
+}
+
+.no-data-message p {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Responsive for V2 */
+@media (max-width: 1024px) {
+  .treemap-controls {
+    flex-direction: column;
   }
-  
-  .treemap-header h2 {
+
+  .control-group {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .treemap-header-v2 {
+    padding: 25px 30px 20px;
+  }
+
+  .treemap-title h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .treemap-container-v2 {
+    margin: 20px 10px;
+    border-radius: 16px;
+  }
+
+  .treemap-header-v2 {
+    padding: 20px 20px 15px;
+  }
+
+  .treemap-title h2 {
     font-size: 1.5rem;
+  }
+
+  .treemap-title .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .treemap-wrapper-v2 {
+    padding: 15px;
+  }
+
+  .treemap-footer {
+    padding: 20px 20px;
+    flex-direction: column;
+  }
+
+  .stat-badge {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .treemap-title h2 {
+    font-size: 1.3rem;
+  }
+
+  .search-input,
+  .filter-select,
+  .mode-btn {
+    font-size: 0.9rem;
+    padding: 10px 14px;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
   }
 }
 
@@ -328,7 +804,7 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .app-container {
-    padding: 10px;
+    padding: 15px;
   }
 
   .header h1 {
@@ -347,12 +823,13 @@ body {
   .metric-selector {
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
 
   .metric-selector button,
   .metric-selector select {
-    width: 200px;
+    width: 100%;
+    max-width: 250px;
   }
 
   .stats {
@@ -380,9 +857,30 @@ body {
     width: 100%;
     max-width: 100%;
   }
+
+  .summary {
+    gap: 15px;
+  }
+
+  .summary-item {
+    min-width: 140px;
+    padding: 15px 20px;
+  }
+
+  .summary-item .value {
+    font-size: 1.4rem;
+  }
+
+  .map-container, .treemap-container-v2 {
+    margin-bottom: 20px;
+  }
 }
 
 @media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.6rem;
+  }
+
   .treemap-header h2 {
     font-size: 1.2rem;
     line-height: 1.3;
@@ -391,4 +889,42 @@ body {
   .treemap-wrapper {
     padding: 15px 5px;
   }
+
+  .summary-item {
+    min-width: 120px;
+    padding: 12px 18px;
+  }
+
+  .summary-item .label {
+    font-size: 0.8rem;
+  }
+
+  .summary-item .value {
+    font-size: 1.2rem;
+  }
+
+  .metric-selector button {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 25px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95));
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.8s ease-out 1s both;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.95;
 }

@@ -17,7 +17,7 @@ namespace Covid19.Server.Controllers
             _dataService = covidDataService;
         }
 
-        [EnableQuery(PageSize = 10000)]
+        [EnableQuery]
         [HttpGet]
         public async Task<ActionResult<IQueryable<CovidConfirmedCase>>> Get()
         {

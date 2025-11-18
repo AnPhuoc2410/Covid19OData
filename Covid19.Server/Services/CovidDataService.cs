@@ -19,17 +19,10 @@ namespace Covid19.Server.Services
 
         public async Task<IEnumerable<CovidDataPoint>> GetCombinedDataAsync()
         {
-            // 1. Gọi tất cả service con chạy song song để tiết kiệm thời gian
-            var confirmTask = _confirmService.GetConfirmedCasesAsync();
-            var deathTask = _deathService.GetDeathServicesAsync();
-            var recoveredTask = _recoveredService.GetRecoverCasesAsync();
-
-            await Task.WhenAll(confirmTask, deathTask, recoveredTask);
-
-            // 2. Lấy kết quả từ các task đã hoàn thành
-            var confirmedCases = await confirmTask;
-            var deathCases = await deathTask;
-            var recoveredCases = await recoveredTask;
+            // 1. Gọi tất cả service con chạy tuần tự để tránh DbContext conflict
+            var confirmedCases = await _confirmService.GetConfirmedCasesAsync();
+            var deathCases = await _deathService.GetDeathServicesAsync();
+            var recoveredCases = await _recoveredService.GetRecoverCasesAsync();
 
             // 3. Sử dụng Dictionary để gộp dữ liệu một cách hiệu quả
             var dataMap = new Dictionary<string, CovidDataPoint>();

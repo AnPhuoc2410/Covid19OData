@@ -1,6 +1,7 @@
 using Covid19.Server.Models;
 using Covid19.Server.Services;
 using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
 
 namespace Covid19.Server
@@ -27,8 +28,11 @@ namespace Covid19.Server
                     .OrderBy()
                     .Count()
                     .Expand()
-                    .AddRouteComponents("odata", modelBuilder.GetEdmModel())
-            );
+                    .SetMaxTop(1000000)
+                    .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -38,18 +42,18 @@ namespace Covid19.Server
             {
                 options.AddPolicy("AllowReactApp",policy =>
                 {
-                    policy.WithOrigins("https://localhost:54956")
+                    policy.AllowAnyOrigin()
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
             });
 
-            builder.Services.AddSingleton<CovidConfirmService>();
-            builder.Services.AddSingleton<CovidDeathService>();
-            builder.Services.AddSingleton<CovidRecoverService>();
-            builder.Services.AddSingleton<DailyReportService>();
+            builder.Services.AddScoped<CovidConfirmService>();
+            builder.Services.AddScoped<CovidDeathService>();
+            builder.Services.AddScoped<CovidRecoverService>();
+            builder.Services.AddScoped<DailyReportService>();
 
-            builder.Services.AddSingleton<CovidDataService>();
+            builder.Services.AddScoped<CovidDataService>();
 
 
             var app = builder.Build();
